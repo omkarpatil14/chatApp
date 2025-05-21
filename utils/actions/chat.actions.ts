@@ -62,16 +62,19 @@ export async function getAllChats(userId) {
       console.error("Error fetching chats:", error);
       return null;
     }
+
+    console.log(data)
   
     return data;
   }
 export async function getChatDetails(userId: string, chatId: string) {
     const supabase =await createClient();
+    console.log(userId,chatId)
     // Fetch chat details
     const { data: chat, error: chatError } = await supabase
         .from("chats")
         .select("*")
-        .eq("id", Number(chatId))
+        .eq("id", (chatId))
         .single();
     if (chatError) {
         console.error("Error fetching chat:", chatError);

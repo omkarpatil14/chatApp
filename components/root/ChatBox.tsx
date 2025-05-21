@@ -22,10 +22,19 @@ const ChatBox = ({ chat,user }) => {
     useEffect(()=>{
         const fetch =async ()=>{
             const data =await getOtherUserInfo(chat.user1,chat.user2,user.id)
-            if(data) setotherUser(data)
+            
+            if(data){
+                setotherUser(data)
+               
+            } 
+
+            
         }
     fetch()
-    },[chat.user1, chat.user2, user.id])
+    },[chat.user1, chat.user2, user.id,otherUser])
+
+    
+
     return (
         <div className={`group mb-0.5 flex shrink-0 items-start gap-x-2 rounded px-2 pb-1 pt-2 max-lg:mb-2 max-lg:px-4 cursor-pointer hover:bg-gray-200/50  bg-white ${isActive?"highlight":""}`} onClick={handleClick}>
             <div className="flex flex-col items-center justify-center gap-y-1 py-1">

@@ -9,6 +9,7 @@ const ChatHeader = ({ user, chatId }) => {
         const fetch = async () => {
             setLoading(true)
             const details = await getChatDetails(user.id, chatId)
+          
             if (details) setdata(details)
                 setLoading(false)
         }
