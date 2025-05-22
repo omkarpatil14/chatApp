@@ -12,7 +12,7 @@ This is a chat application built using Next.js, Tailwind CSS, Supabase (PostgreS
 - Next.js
 - Tailwind CSS
 - Supabase (PostgreSQL)
-- TypeScript
+- JavaScript
 
 ## Getting Started
 
@@ -39,4 +39,4 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
 4. Run the development server   
 npm run dev
 
-    
+
