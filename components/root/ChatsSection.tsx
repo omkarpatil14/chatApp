@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ChatBox from './ChatBox'
-import { createChat, getAllChats } from "@/utils/actions/chat.actions";
+import { createChat, getAllChats , getAllChatsByFirstName} from "@/utils/actions/chat.actions";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -15,21 +15,38 @@ import {
 import { Input } from '../ui/input';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { get } from 'http';
 
 const ChatsSection = ({ user }) => {
     const [chats, setchats] = useState<any>([])
     const [newChatEmail, setnewChatEmail] = useState<any>('')
+    const [searchEmail, setsearchEmail] = useState<any>('')
     const router = useRouter()
     const handleonChange = (e)=>{
         setnewChatEmail(e.target.value)
     }
-    useEffect(() => {
-        const getChats = async () => {
+
+     const getChats = async () => {
             const data = await getAllChats(user.id)
             if (data) setchats(data)
         }
+
+    useEffect(() => {
+       
         getChats()
     }, [setchats, user.id])
+
+    const handleSearch = async () => {
+        const data = await getAllChatsByFirstName(searchEmail);
+        if (data && data.length > 0) {
+            setchats([])
+            setchats(data);
+        } else {
+            toast("No chats found with that email.");
+            getChats(); 
+        }
+
+    };
 
     const handleonClick = async () => {
         toast("Please wait..")
@@ -70,12 +87,20 @@ const ChatsSection = ({ user }) => {
                 </div>
             </div>
             <div className="flex items-center gap-x-2">
-                <button className="bg-white border-gray-200 text-gray-800 hover:bg-gray-100 shadow-sm disabled:text-gray-400 disabled:cursor-not-allowed disabled:bg-gray-100 border py-1.5 px-3 text-xs rounded transition flex w-20 items-center justify-center gap-x-1 !shadow-none max-lg:w-auto max-lg:px-2" fdprocessedid="dgn53b">
-                    <svg stroke="currentColor" fill="none" strokeWidth="0" viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 " height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M18.319 14.4326C20.7628 11.2941 20.542 6.75347 17.6569 3.86829C14.5327 0.744098 9.46734 0.744098 6.34315 3.86829C3.21895 6.99249 3.21895 12.0578 6.34315 15.182C9.22833 18.0672 13.769 18.2879 16.9075 15.8442C16.921 15.8595 16.9351 15.8745 16.9497 15.8891L21.1924 20.1317C21.5829 20.5223 22.2161 20.5223 22.6066 20.1317C22.9971 19.7412 22.9971 19.1081 22.6066 18.7175L18.364 14.4749C18.3493 14.4603 18.3343 14.4462 18.319 14.4326ZM16.2426 5.28251C18.5858 7.62565 18.5858 11.4246 16.2426 13.7678C13.8995 16.1109 10.1005 16.1109 7.75736 13.7678C5.41421 11.4246 5.41421 7.62565 7.75736 5.28251C10.1005 2.93936 13.8995 2.93936 16.2426 5.28251Z" fill="currentColor"></path></svg><span className="max-lg:hidden">Search</span>
+                <div className="relative rounded-md"  >
+                   <input type="text" placeholder='  Search Email' value={searchEmail}  onChange={(e)=>setsearchEmail(e.target.value)}/>
+                </div>
+                <button onClick={handleSearch} className="bg-white border-gray-200 text-gray-800 hover:bg-gray-100 shadow-sm disabled:text-gray-400 disabled:cursor-not-allowed disabled:bg-gray-100 border py-1.5 px-3 text-xs rounded transition flex w-20 items-center justify-center gap-x-1 !shadow-none max-lg:w-auto max-lg:px-2" fdprocessedid="dgn53b">
+                    <svg stroke="currentColor" fill="none" strokeWidth="0" viewBox="0 0 24 24" className="h-3.5 w-3.5 shrink-0 " height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M18.319 14.4326C20.7628 11.2941 20.542 6.75347 17.6569 3.86829C14.5327 0.744098 9.46734 0.744098 6.34315 3.86829C3.21895 6.99249 3.21895 12.0578 6.34315 15.182C9.22833 18.0672 13.769 18.2879 16.9075 15.8442C16.921 15.8595 16.9351 15.8745 16.9497 15.8891L21.1924 20.1317C21.5829 20.5223 22.2161 20.5223 22.6066 20.1317C22.9971 19.7412 22.9971 19.1081 22.6066 18.7175L18.364 14.4749C18.3493 14.4603 18.3343 14.4462 18.319 14.4326ZM16.2426 5.28251C18.5858 7.62565 18.5858 11.4246 16.2426 13.7678C13.8995 16.1109 10.1005 16.1109 7.75736 13.7678C5.41421 11.4246 5.41421 7.62565 7.75736 5.28251C10.1005 2.93936 13.8995 2.93936 16.2426 5.28251Z" fill="currentColor">
+                        </path>
+                        
+                    </svg>
+                    <span onClick={handleSearch}  className="max-lg:hidden">Search</span>
                 </button>
                 <div className="relative rounded-md">
                     <div className="relative"><button className="bg-white border-gray-200 text-gray-800 hover:bg-gray-100 shadow-sm disabled:text-gray-400 disabled:cursor-not-allowed disabled:bg-gray-100 border py-1.5 px-3 text-xs rounded transition flex w-20 items-center justify-center gap-x-1 !shadow-none max-lg:w-auto max-lg:px-2" fdprocessedid="66ber8"><svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 16 16" className="h-4 w-4 shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M6 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-2-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5"></path></svg><span className="max-lg:hidden">Filter</span></button></div>
                 </div>
+
             </div>
         </div>
         <div className="periskope-scrollbar flex flex-col overflow-x-hidden  !overflow-y-scroll bg-white h-[100vh]">

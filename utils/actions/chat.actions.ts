@@ -67,6 +67,32 @@ export async function getAllChats(userId) {
   
     return data;
   }
+
+
+export async function getAllChatsByFirstName(firstName: string) {
+  const supabase = await createClient();
+  console.log(firstName)
+
+  const { data, error } = await supabase.from("chats").select("*");
+
+  console.log(data)
+
+  if (error) {
+    console.error("Error fetching chats:", error);
+    return null;
+  }
+
+    const filtered = data?.filter(
+    (chat) =>
+        chat.firstName1 === firstName 
+    );
+
+  console.log(filtered)
+
+  return filtered;
+}
+
+
 export async function getChatDetails(userId: string, chatId: string) {
     const supabase =await createClient();
     console.log(userId,chatId)
